@@ -47,7 +47,7 @@ def trafficLight(stMap):
     for a in range(1, len(stMap)-1):
         for i in range(1, len(stMap[0])-1):
             if ((stMap[a-1][i] == 0 and stMap[a+1][i] == 0 and stMap[a][i-1]==0 and stMap[a][i+1]==0) or (stMap[a-1][i] == 0 and stMap[a+1][i] == 0 and stMap[a][i-1]==0) or (stMap[a+1][i] == 0 and stMap[a][i-1]==0 and stMap[a][i+1]==0) or (stMap[a-1][i] == 0 and stMap[a+1][i] == 0 and stMap[a][i+1]==0) or (stMap[a-1][i] == 0 and stMap[a][i-1]==0 and stMap[a][i+1]==0)) and stMap[a][i]== 0:
-                stMap[a][i] = (random.randint(1,10), random.randint(1,10))
+                stMap[a][i] = (random.randint(0,10), random.randint(0,10))
 
     return stMap
 
@@ -147,6 +147,10 @@ def add_semaphore_wait(semaphore:list[int], semaphorepos:tuple[int], lastpos:tup
         return [lastpos for _ in range(semaphore[0])] 
     else: # si hace esperar columnas
         return [lastpos for _ in range(semaphore[1])]
+
+
+def chose_semaphore_case(grid, x, y):
+    pass
 
 
 def simulatepaths(paths, grid):
@@ -391,7 +395,7 @@ def fitness(childpath:dict, childgrid):
 
 
 
-def mutate(childgrid, mr):
+def mutate(childgrid):
     """
     otorga una probabilidad del 10% de mejora a cada hijo
     """
@@ -400,7 +404,7 @@ def mutate(childgrid, mr):
         for cell in range(len(childgrid[row])):
             # si encontramos un semaforo tenemos probabilidad de mutar su tiempo
             if type(childgrid[row][cell]) is tuple:
-                if random.random() <= mr:
+                if random.random() <= 0.1:
                     xtime,ytime = childgrid[row][cell]
                     if xtime > 1:
                         xtime -= 1
@@ -481,10 +485,9 @@ def main():
 
     # Configuracion inicial
     POPULATION = 5
-    GENERATIONS = 600
+    GENERATIONS = 500
     CROSSOVER_RATE = 0.4
-    MUTATION_RATE = 0.35
-    FILENAME = f"g{GENERATIONS}_cr{CROSSOVER_RATE}_mt{MUTATION_RATE}_p{POPULATION}".replace(".","-")
+    MUTATION_RATE = 0.2
 
 
     emptygrids = [gengrid() for _ in range(POPULATION)] # hacer population de 5 grids
@@ -495,7 +498,7 @@ def main():
     
     best_fitness = 0
     best_chromosome = ""
-    file = open(f"{FILENAME}.txt", "w", encoding="utf-8")
+    file = open("result3.txt", "w", encoding="utf-8")
     
     file.write(f"\nPoblacion inicial: \n{population}\n")
     file.write(f"\nTamano de cada poblacion: {POPULATION}.")
@@ -515,7 +518,7 @@ def main():
         
         # causar mutaciones en cada generacion y hacer que corran mas carros
         for i in range(len(children)):
-            children[i] = mutate(children[i], MUTATION_RATE)
+            children[i] = mutate(children[i])
         
         for i in range(len(children)):
             # correr nuevamente la simulacion de carros pasando por la grilla

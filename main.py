@@ -381,7 +381,7 @@ def fitness(childpath:dict, childgrid):
                 for k,v in childpath.items():
                     if len(v) > 20:
                         score += 1
-                    elif len(v) in range(15,20):
+                    elif len(v) in range(15, 20):
                         score += 3
                     elif len(v) in range(10, 15):
                         score += 5
@@ -400,9 +400,9 @@ def mutate(childgrid):
         for cell in range(1, len(childgrid) - 1):
             # si encontramos un semaforo tenemos probabilidad de mutar su tiempo
             if type(cell) is tuple:
-                if random.random < 0.1:
+                if random.random() < 0.1:
                     childgrid[row][cell] -= 1
-    
+
     return childgrid
 
 
